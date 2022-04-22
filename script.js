@@ -19,15 +19,16 @@ const favdata = {
 function createFavorites() {
     // creating an empty array
     const html = []
+    const _favorites = JSON.parse(localStorage.getItem('favorites'))
 
-    for (let i = 1; i < favdata.notes.length; i++) {
+    for (let i = 1; i < _favorites.length; i++) {
         html.push(`
 
         <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src="${favdata.notes[i].image}" alt="Card image cap">
+        <img class="card-img-top" src="${_favorites[i].url}" alt="Card image cap">
         <div class="card-body">
-          <h5 class="card-title">${favdata.notes[i].title}</h5>
-          <p class="card-text">${favdata.notes[i].date}</p>
+          <h5 class="card-title">${_favorites[i].title}</h5>
+          <p class="card-text">${_favorites[i].date}</p>
         </div>
       </div>`)
     }
@@ -123,18 +124,17 @@ $form.addEventListener('submit', async function(e) {
 
     addFavoriteEvent(json)
 
+    addCloseEvent()
 
 })
 
 const refreshPrevent = localStorage.getItem('favorites')
 
-
-
 if (refreshPrevent) {
 
-    const favorites = JSON.parse(refreshPrevent)
-        // this favorites is an array
-        // favorites[ fav1, fav2 ,fav3]
+    // const favorites = JSON.parse(refreshPrevent)
+    // this favorites is an array
+    // favorites[ fav1, fav2 ,fav3]
 
     // $modal.innerHTML = `
     //         <div id="modal" class="" tabindex="-1" >
@@ -160,7 +160,7 @@ if (refreshPrevent) {
     //             </div>
     //         </div>
     //         </div>`
-
+    console.log('if local has exist')
     createFavorites()
 
 }
@@ -171,8 +171,7 @@ function addFavoriteEvent(json) {
     const $savemodal = document.getElementById('savemodal')
 
     $savemodal.addEventListener('click', function() {
-
-        const favorites = JSON.parse(refreshPrevent)
+        let favorites = JSON.parse(refreshPrevent)
         favorites.push(json)
 
         favdata.notes.push({
@@ -183,22 +182,24 @@ function addFavoriteEvent(json) {
 
         $modal.style.display = 'none'
 
-        // render favorites
-        createFavorites()
-
         // store the new favorite to localStorage
         localStorage.setItem('favorites', JSON.stringify(favorites))
-        console.log(favorites)
-        console.log(localStorage)
+            // render favorites
+        createFavorites()
+
+
     })
 
 }
 
 
-const $cmodal = document.getElementById('cmodal')
+function addCloseEvent() {
 
-$cmodal.addEventListener('click', function() {
+    const $cmodal = document.getElementById('cmodal')
 
-    $modal.style.display = 'none'
+    $cmodal.addEventListener('click', function() {
 
-})
+        $modal.style.display = 'none'
+
+    })
+}
